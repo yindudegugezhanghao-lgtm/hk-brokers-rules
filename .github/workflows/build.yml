@@ -59,7 +59,7 @@ jobs:
           config = json.loads(p.read_text())
           config['rule-providers']['HK_Brokers'] = {
               'type': 'file', 'path': './rules/HK_Brokers.mrs', 'behavior': 'domain', 'format': 'mrs'}
-          p.write_text(json.dumps(config))
+          p.write_text(json.dumps(config, ensure_ascii=False), encoding='utf-8')
           PY
           .tools/mihomo -t -d "$PWD/.build" -f "$PWD/.build/override-fixture.json"
       - name: Publish validated files atomically to release branch
@@ -97,3 +97,4 @@ jobs:
       - name: Download public subscriptions and revalidate on the runner
         if: env.PUBLISHED == 'true'
         run: python scripts/verify_published.py
+
