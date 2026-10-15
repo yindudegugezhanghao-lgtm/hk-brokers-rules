@@ -13,7 +13,7 @@ from build import ROOT, collect, validate_domain, cloud_only
 class SourceValidation(unittest.TestCase):
     def test_reviewed_ledger_matches_sources(self):
         brokers, grouped, domains = collect()
-        self.assertEqual(len(brokers), 6)
+        self.assertEqual(set(brokers), set(grouped))
         self.assertEqual(sum(map(len, grouped.values())), len(domains))
 
     def test_invalid_broad_and_non_main_domains(self):

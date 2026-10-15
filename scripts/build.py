@@ -36,6 +36,8 @@ def digest(data):
 
 
 def validate_domain(domain):
+    if domain in PUBLIC_SUFFIXES:
+        raise ValueError(f"Public suffix is not a registrable domain: {domain}")
     if len(domain) > 253 or domain != domain.lower():
         raise ValueError(f"Invalid lowercase domain: {domain}")
     try:
@@ -166,7 +168,8 @@ def main():
     (out / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (out / "validation.json").write_text(json.dumps(results, indent=2) + "\n")
     (out / "SHA256SUMS").write_text("".join(
-        f"{digest(p.read_bytes())}  {p.name}\n" for p in sorted(out.iterdir()) if p.is_file()))
+        f"{digest(p.read_bytes())}  {p.name}\n" for p in sorted(out.iterdir())
+        if p.is_file() and p.name != "SHA256SUMS"))
     summary = os.environ.get("GITHUB_STEP_SUMMARY")
     if summary:
         with open(summary, "a", encoding="utf-8") as f:
