@@ -1,0 +1,23 @@
+name: 误匹配、失效或兼容问题
+description: 报告规则异常或安装问题
+title: '[Problem] '
+body:
+  - type: input
+    id: domain
+    attributes:
+      label: 相关域名 / 规则
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: 客户端、系统与版本
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: 预期、实际结果和脱敏复现说明
+      description: 请勿上传账户、交易、机场节点、订阅、密码或完整配置。
+    validations:
+      required: true

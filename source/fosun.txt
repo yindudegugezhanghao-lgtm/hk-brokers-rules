@@ -1,0 +1,5 @@
+# Fosun Wealth — evidence: docs/sources.md
+DOMAIN-SUFFIX,fosunwealth.com
+DOMAIN-SUFFIX,fosunwealth.hk
+DOMAIN-SUFFIX,fotechwealth.com
+DOMAIN-SUFFIX,fotechwealth.com.cn

@@ -1,0 +1,6 @@
+# Tiger Brokers — evidence: docs/sources.md
+DOMAIN-SUFFIX,itiger.com
+DOMAIN-SUFFIX,itigerup.com
+DOMAIN-SUFFIX,laohu8.com
+DOMAIN-SUFFIX,skytigris.cn
+DOMAIN-SUFFIX,tigerfintech.com

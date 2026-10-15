@@ -1,0 +1,99 @@
+name: Build and publish
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'source/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - 'examples/**'
+      - 'docs/**'
+      - 'brokers.json'
+      - 'tools.lock.json'
+      - '.github/workflows/build.yml'
+  pull_request:
+    paths:
+      - 'source/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - 'examples/**'
+      - 'docs/**'
+      - 'brokers.json'
+      - 'tools.lock.json'
+      - '.github/workflows/build.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hk-brokers-${{ github.event_name == 'pull_request' && github.ref || 'publish' }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: '3.12.12'
+      - name: Validate sources and reject poisoned inputs
+        run: python -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Verify optional override preserves existing configuration
+        run: node tests/test_override.cjs --fixture
+      - name: Build real MRS and exercise live Mihomo routing
+        run: python scripts/build.py
+      - name: Validate generated override with the pinned Mihomo parser
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('.build/override-fixture.json')
+          config = json.loads(p.read_text())
+          config['rule-providers']['HK_Brokers'] = {
+              'type': 'file', 'path': './rules/HK_Brokers.mrs', 'behavior': 'domain', 'format': 'mrs'}
+          p.write_text(json.dumps(config))
+          PY
+          .tools/mihomo -t -d "$PWD/.build" -f "$PWD/.build/override-fixture.json"
+      - name: Publish validated files atomically to release branch
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          current="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq '.object.sha')"
+          if [[ "$current" != "$GITHUB_SHA" ]]; then
+            echo "A newer source commit exists; skipping stale publication."
+            exit 0
+          fi
+          gh auth setup-git
+          git init .build/publish
+          cd .build/publish
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          if git ls-remote --exit-code --heads origin release >/dev/null; then
+            git fetch --depth=1 origin release
+            git checkout -B release FETCH_HEAD
+          else
+            git checkout --orphan release
+          fi
+          mkdir -p rules
+          cp ../rules/* rules/
+          cp ../../LICENSE LICENSE
+          printf '# HK Broker Rules build output\n\nSource and installation guide: https://github.com/%s\n\nSee rules/manifest.json for source commit and tool version.\n' "$GITHUB_REPOSITORY" > README.md
+          git add rules LICENSE README.md
+          git commit -m "Publish validated rules from $GITHUB_SHA"
+          git push origin HEAD:release
+          echo "PUBLISHED=true" >> "$GITHUB_ENV"
+      - name: Download public subscriptions and revalidate on the runner
+        if: env.PUBLISHED == 'true'
+        run: python scripts/verify_published.py

@@ -1,0 +1,6 @@
+# Longbridge / LongPort — evidence: docs/sources.md
+DOMAIN-SUFFIX,lbctrl.com
+DOMAIN-SUFFIX,lbkrs.com
+DOMAIN-SUFFIX,longbridge.cn
+DOMAIN-SUFFIX,longbridge.com
+DOMAIN-SUFFIX,longportapp.com

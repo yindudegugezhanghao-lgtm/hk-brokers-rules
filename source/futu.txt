@@ -1,0 +1,6 @@
+# Futu / moomoo — evidence: docs/sources.md
+DOMAIN-SUFFIX,futuhk.com
+DOMAIN-SUFFIX,futuholdings.com
+DOMAIN-SUFFIX,futunn.com
+DOMAIN-SUFFIX,futustatic.com
+DOMAIN-SUFFIX,moomoo.com

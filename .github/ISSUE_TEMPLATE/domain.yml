@@ -1,0 +1,24 @@
+name: 新域名建议
+description: 提交有官方依据的六家券商域名线索
+title: '[Domain] '
+body:
+  - type: input
+    id: broker
+    attributes:
+      label: 所属券商
+      description: 当前仅维护 README 列出的六家
+    validations:
+      required: true
+  - type: input
+    id: domain
+    attributes:
+      label: 主域名
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 官方证据与用途
+      description: 提供官方链接、核验日期及理由；社区清单不能替代官方依据。不要上传账户、订阅或节点。
+    validations:
+      required: true

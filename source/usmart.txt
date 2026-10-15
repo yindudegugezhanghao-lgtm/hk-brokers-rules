@@ -1,0 +1,4 @@
+# uSMART — evidence: docs/sources.md
+DOMAIN-SUFFIX,usmart.hk
+DOMAIN-SUFFIX,usmartglobal.com
+DOMAIN-SUFFIX,usmartsecurities.com
