@@ -3,7 +3,6 @@
 All target names resolve to a loopback fixture. No brokerage accounts, APIs,
 quotes or trades are contacted by these routing tests.
 """
-import contextlib
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import http.client
 import json
@@ -102,8 +101,8 @@ def validate_all(exe, out, domains):
                             if process.poll() is not None:
                                 raise RuntimeError("Mihomo exited before provider initialization")
                             try:
-                                with opener.open(f"http://127.0.0.1:{api_port}/providers/rules/HK_Brokers", timeout=1) as r:
-                                    loaded = json.load(r)
+                                with opener.open(f"http://127.0.0.1:{api_port}/providers/rules", timeout=1) as r:
+                                    loaded = json.load(r).get("providers", {}).get("HK_Brokers", {})
                                 if loaded.get("ruleCount") == len(domains):
                                     break
                             except (OSError, ValueError):
@@ -161,3 +160,4 @@ def validate_all(exe, out, domains):
     results["scope"] = "GitHub-hosted runner; real Mihomo routing against loopback fixtures; no iPhone or authenticated brokerage tests"
     print(json.dumps(results, indent=2), flush=True)
     return results
+
