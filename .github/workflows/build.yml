@@ -93,8 +93,8 @@ jobs:
           git add rules LICENSE README.md
           git commit -m "Publish validated rules from $GITHUB_SHA"
           git push origin HEAD:release
+          echo "RELEASE_COMMIT=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
           echo "PUBLISHED=true" >> "$GITHUB_ENV"
       - name: Download public subscriptions and revalidate on the runner
         if: env.PUBLISHED == 'true'
         run: python scripts/verify_published.py
-

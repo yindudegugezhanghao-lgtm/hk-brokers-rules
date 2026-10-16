@@ -12,17 +12,17 @@ cloud_only()
 manifest = json.loads((ROOT / ".build/rules/manifest.json").read_text())
 repository = os.environ["GITHUB_REPOSITORY"]
 base = f"https://raw.githubusercontent.com/{repository}/release/rules/"
+immutable = f"https://raw.githubusercontent.com/{repository}/{os.environ['RELEASE_COMMIT']}/rules/"
 remote = ROOT / ".build/downloaded"
 remote.mkdir(exist_ok=True)
+deadline = time.monotonic() + 360  # GitHub raw can cache a moving branch for 5 minutes.
 for name in ["HK_Brokers.list", "HK_Brokers.yaml", "HK_Brokers.mrs", "manifest.json", "validation.json", "SHA256SUMS"]:
     expected = (ROOT / ".build/rules" / name).read_bytes()
-    for attempt in range(12):
+    for attempt in range(73):
         try:
-            # Verify the exact subscription URLs users will enter. Only build
-            # metadata uses a cache-busting query when a run republishes it.
-            url = base + name
-            if not name.startswith("HK_Brokers."):
-                url += "?run=" + os.environ["GITHUB_RUN_ID"]
+            # Verify exact user subscription URLs. Run-specific metadata is
+            # checked at the immutable published Git commit, not a cached branch.
+            url = (base if name.startswith("HK_Brokers.") else immutable) + name
             req = urllib.request.Request(url,
                                          headers={"Cache-Control": "no-cache"})
             with urllib.request.urlopen(req, timeout=20) as response:
@@ -30,10 +30,10 @@ for name in ["HK_Brokers.list", "HK_Brokers.yaml", "HK_Brokers.mrs", "manifest.j
             if data != expected:
                 raise ValueError("Published content differs (possibly stale CDN cache)")
             (remote / name).write_bytes(data)
-            print(f"HTTPS 200 and byte comparison passed: {base + name}", flush=True)
+            print(f"HTTPS 200 and byte comparison passed: {url}", flush=True)
             break
         except (OSError, ValueError) as exc:
-            if attempt == 11:
+            if attempt == 72 or time.monotonic() >= deadline:
                 raise
             print(f"Waiting for GitHub raw propagation: {name}: {exc}", flush=True)
             time.sleep(5)
