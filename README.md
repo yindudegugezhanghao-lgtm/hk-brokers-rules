@@ -37,9 +37,16 @@ Free, open-source domain routing rules for six Hong Kong brokerage platforms. Re
 
 ## iPhone Clash Mi
 
-完整步骤、版本依据及恢复方法见 **[Clash Mi 安装说明](docs/clash-mi.md)**。
+完整步骤、版本依据及恢复方法见 **[Clash Mi 安装说明](docs/clash-mi.md)**，包含以下四种方式：
 
-已有配置编辑入口时，只需新增一个规则提供者，再新增一条引用规则，无需逐个输入域名：
+| 方式 | 操作概要 | 适用条件 |
+| --- | --- | --- |
+| [分流模板 → 提供者订阅](docs/clash-mi.md#native-templates) | 建 MRS 提供者 → 建 RULE-SET 模板 → 在当前配置绑定已有策略组 | 已使用完整模板分流；首次从机场规则切换须先承接原分流 |
+| [现有配置追加](docs/clash-mi.md#configuration) | 追加一个提供者和一条 RULE-SET，支持 MRS / YAML / LIST | 能编辑配置或已有可靠追加机制 |
+| [JS 自动追加](docs/clash-mi.md#javascript) | 导入项目 JS，自动创建提供者、引用和选择组 | 当前使用内置覆写，不另外用模板重建全部规则 |
+| [本地静态文件](docs/clash-mi.md#offline) | 下载规则文件，在支持的本地配置中引用 | 手动更新，不依赖在线提供者 |
+
+**你要找的提供者订阅入口：核心设置 → 分流模板 → 规则提供者 → ＋。** 填写：
 
 | 图形界面字段 | 值 |
 | --- | --- |
@@ -50,7 +57,9 @@ Free, open-source domain routing rules for six Hong Kong brokerage platforms. Re
 | Behavior | `domain` |
 | 更新间隔 | 24 小时（配置文本为 `86400` 秒） |
 
-提供者必须在实际生效配置的 `rules` 中被引用：
+原生模板方式还需返回 **分流模板 → 规则模板 → ＋**，取名 `券商分流`，新增 **Type: RULE-SET → 规则提供者: HK_Brokers**。模板内无需填写出口，保存后在 **配置 → 当前机场配置 → 编辑 → 规则** 中为该模板绑定已有策略组，并把券商模板排在通用兜底模板前面。仅添加提供者不会自动生效；模板绑定的前提和开关影响详见上方教程 A。
+
+在配置文本中，最终生效引用为：
 
 ```yaml
 - RULE-SET,HK_Brokers,PROXY_GROUP
@@ -58,7 +67,7 @@ Free, open-source domain routing rules for six Hong Kong brokerage platforms. Re
 
 把 `PROXY_GROUP` 换成自己配置中实际存在的策略组名，放在通用 GEOIP、GEOSITE 和 MATCH 前面；如果更早有命中的 DOMAIN 规则，也需要调整优先级。保持规则模式，保留所有原规则、DNS、TUN 和节点。
 
-**不要为安装本规则开启 Clash Mi 的“覆写规则”开关**：所检查源码中该开关会替换原规则集合。不能安全追加时，可使用项目提供的 [可选 JS 覆写](examples/clash-mi.js)：自动加入提供者、一条规则和通用选择组 `HK_Brokers_Policy`，用户从已有组或节点中选择出口，不按地区猜测。已有自定义 JS 的用户请按文档合并，避免覆盖原脚本。
+**普通机场原配置用户不要只建券商模板后就开启“覆写规则”**：所核对源码对模板规则和提供者设置替换标志，不能据此保证保留原机场全部分流。已采用完整模板体系的人可在原体系内增加并绑定券商模板；否则使用配置追加或 [JS 自动追加](examples/clash-mi.js)。JS 使用通用选择组 `HK_Brokers_Policy`，不按地区猜测出口；已有自定义覆写的人需合并，避免覆盖原脚本。规则 URL 不是机场节点订阅，也不是整套分流模板的一键导入链接。
 
 ## 通用 Mihomo 示例
 
