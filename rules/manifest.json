@@ -38,13 +38,14 @@
       "fotechwealth.com.cn"
     ]
   },
-  "source_commit": "ad16f06237650f87cc0ea26e401b840caad86348",
-  "workflow_run": "https://github.com/yindudegugezhanghao-lgtm/hk-brokers-rules/actions/runs/38831518043",
+  "source_commit": "9902251e6293b231365e1cb11246d56f35961de6",
+  "workflow_run": "https://github.com/yindudegugezhanghao-lgtm/hk-brokers-rules/actions/runs/38912865514",
   "mihomo": "Mihomo Meta v1.19.32 linux amd64 with go1.26.8 Wed Sep 30 16:55:19 UTC 2026\nUse tags: with_gvisor",
-  "built_at": "2026-10-16T00:48:05.312230+00:00",
+  "built_at": "2026-10-16T14:05:03.098178+00:00",
   "files": {
     "HK_Brokers.list": "ba6c86ca4ab21ff46b21f727b8fa52d207008cd2f11c251f4550e7ac88815aea",
     "HK_Brokers.mrs": "81971aca44c768cc41d3bbfe8f93e019317ef1caa909507f452dae273b1fb745",
-    "HK_Brokers.yaml": "1acaac551e1b20e0fcd1326090db403ae627bde9517c33637768e57e5810e20d"
+    "HK_Brokers.yaml": "1acaac551e1b20e0fcd1326090db403ae627bde9517c33637768e57e5810e20d",
+    "HK_Brokers_classical.yaml": "33338faf31904d074c734746b721e4cac068cbf42151e60fb4b2659d4252cd90"
   }
 }

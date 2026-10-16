@@ -21,6 +21,15 @@
     },
     {
       "type": "file",
+      "format": "yaml",
+      "behavior": "classical",
+      "rule_count": 24,
+      "positive_tests": 72,
+      "negative_tests": 57,
+      "result": "passed"
+    },
+    {
+      "type": "file",
       "format": "mrs",
       "behavior": "domain",
       "rule_count": 24,
@@ -32,6 +41,15 @@
       "type": "http",
       "format": "mrs",
       "behavior": "domain",
+      "rule_count": 24,
+      "positive_tests": 72,
+      "negative_tests": 57,
+      "result": "passed"
+    },
+    {
+      "type": "http",
+      "format": "yaml",
+      "behavior": "classical",
       "rule_count": 24,
       "positive_tests": 72,
       "negative_tests": 57,
