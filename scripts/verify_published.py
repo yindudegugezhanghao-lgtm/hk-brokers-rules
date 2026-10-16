@@ -18,7 +18,12 @@ for name in ["HK_Brokers.list", "HK_Brokers.yaml", "HK_Brokers.mrs", "manifest.j
     expected = (ROOT / ".build/rules" / name).read_bytes()
     for attempt in range(12):
         try:
-            req = urllib.request.Request(base + name + "?run=" + os.environ["GITHUB_RUN_ID"],
+            # Verify the exact subscription URLs users will enter. Only build
+            # metadata uses a cache-busting query when a run republishes it.
+            url = base + name
+            if not name.startswith("HK_Brokers."):
+                url += "?run=" + os.environ["GITHUB_RUN_ID"]
+            req = urllib.request.Request(url,
                                          headers={"Cache-Control": "no-cache"})
             with urllib.request.urlopen(req, timeout=20) as response:
                 data = response.read()

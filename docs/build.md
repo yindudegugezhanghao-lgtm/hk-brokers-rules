@@ -39,7 +39,7 @@ mihomo convert-ruleset domain mrs HK_Brokers.mrs roundtrip.txt
 
 先完成全部生成及测试，再把 `.build/rules` 作为一次 Git 提交推送至 `release` 分支；LIST / YAML / MRS 不会分批发布。发布前检查源分支头，跳过过时构建，且串行化发布。若生成或测试失败，不更新发布分支；公开下载复核若因 GitHub 传播或网络故障失败，已提交的文件仍是此前通过验证的完整集合，工作流报告失败供排查。
 
-发布后 `scripts/verify_published.py` 从 GitHub 公共 HTTPS 下载订阅文件，逐字节比较，再用下载文件重做真实路由测试。裸链接 CDN 可能有短时缓存；复核使用带运行号的查询参数防止读到旧缓存，正式稳定链接不需要参数。
+发布后 `scripts/verify_published.py` 从 GitHub 公共 HTTPS 下载订阅文件，逐字节比较，再用下载文件重做真实路由测试。三个订阅文件使用用户实际填写的稳定直链验证；易变的构建元数据使用带运行号的查询参数。GitHub raw CDN 可能有短时缓存，脚本会重试。
 
 `manifest.json` 包含域名数量、分券商列表、来源提交、工具版本、构建时间、Actions 地址和文件哈希；`validation.json` 包含测试结果，`SHA256SUMS` 用于内容校验。每个发布提交可回溯和恢复。
 
