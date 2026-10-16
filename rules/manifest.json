@@ -1,0 +1,50 @@
+{
+  "domain_count": 24,
+  "brokers": {
+    "futu": [
+      "futuhk.com",
+      "futuholdings.com",
+      "futunn.com",
+      "futustatic.com",
+      "moomoo.com"
+    ],
+    "tiger": [
+      "itiger.com",
+      "itigerup.com",
+      "laohu8.com",
+      "skytigris.cn",
+      "tigerfintech.com"
+    ],
+    "longbridge": [
+      "lbctrl.com",
+      "lbkrs.com",
+      "longbridge.cn",
+      "longbridge.com",
+      "longportapp.com"
+    ],
+    "huatai": [
+      "htsc.com.hk",
+      "zhangle.com"
+    ],
+    "usmart": [
+      "usmart.hk",
+      "usmartglobal.com",
+      "usmartsecurities.com"
+    ],
+    "fosun": [
+      "fosunwealth.com",
+      "fosunwealth.hk",
+      "fotechwealth.com",
+      "fotechwealth.com.cn"
+    ]
+  },
+  "source_commit": "f4592d0d906c0964e8b594a8d81a1d95d99f5dab",
+  "workflow_run": "https://github.com/yindudegugezhanghao-lgtm/hk-brokers-rules/actions/runs/38826888661",
+  "mihomo": "Mihomo Meta v1.19.32 linux amd64 with go1.26.8 Wed Sep 30 16:55:19 UTC 2026\nUse tags: with_gvisor",
+  "built_at": "2026-10-16T00:00:14.246343+00:00",
+  "files": {
+    "HK_Brokers.list": "ba6c86ca4ab21ff46b21f727b8fa52d207008cd2f11c251f4550e7ac88815aea",
+    "HK_Brokers.mrs": "81971aca44c768cc41d3bbfe8f93e019317ef1caa909507f452dae273b1fb745",
+    "HK_Brokers.yaml": "1acaac551e1b20e0fcd1326090db403ae627bde9517c33637768e57e5810e20d"
+  }
+}

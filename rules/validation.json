@@ -1,0 +1,43 @@
+{
+  "roundtrip": "passed",
+  "providers": [
+    {
+      "type": "file",
+      "format": "text",
+      "behavior": "classical",
+      "rule_count": 24,
+      "positive_tests": 72,
+      "negative_tests": 57,
+      "result": "passed"
+    },
+    {
+      "type": "file",
+      "format": "yaml",
+      "behavior": "domain",
+      "rule_count": 24,
+      "positive_tests": 72,
+      "negative_tests": 57,
+      "result": "passed"
+    },
+    {
+      "type": "file",
+      "format": "mrs",
+      "behavior": "domain",
+      "rule_count": 24,
+      "positive_tests": 72,
+      "negative_tests": 57,
+      "result": "passed"
+    },
+    {
+      "type": "http",
+      "format": "mrs",
+      "behavior": "domain",
+      "rule_count": 24,
+      "positive_tests": 72,
+      "negative_tests": 57,
+      "result": "passed"
+    }
+  ],
+  "corrupt_mrs_rejected": true,
+  "scope": "GitHub-hosted runner; real Mihomo routing against loopback fixtures; no iPhone or authenticated brokerage tests"
+}
