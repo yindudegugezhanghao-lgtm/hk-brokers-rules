@@ -151,7 +151,7 @@ rules:
 
 想用 YAML 时，将 URL 后缀改为 `.yaml`、`format` 改为 `yaml`，保持 `behavior: domain`；用 LIST 则改为 `.list`、`format: text`、`behavior: classical`。三种格式的 RULE-SET 引用相同。
 
-**不要开启“覆写规则”来绑定一个新模板。** 在本次检查的官方源码中，该路径设置 `OverWriteRules / OverWriteRuleProviders = true`，会替换原规则和提供者。项目不把“建模板 + 开启覆写”作为保留机场规则的安装方式。
+**采用 B 的追加方式时，不要再为券商模板开启“覆写规则”。** 当前源码会为模板规则及提供者设置替换标志，可能覆盖你在原配置中保留的内容；完整原生模板管理的条件已单独写在 A 中。
 
 <a id="javascript"></a>
 
@@ -175,7 +175,7 @@ https://raw.githubusercontent.com/yindudegugezhanghao-lgtm/hk-brokers-rules/main
 
 MRS 提供者每 24 小时更新域名；JS 文件本身是否定时更新，由客户端的覆写更新设置决定。无需再额外创建 A 的模板，避免重复或后续替换。
 
-**已有自定义 JS / YAML 覆写的用户：** 不要替换当前脚本。优先使用方法一，或将本脚本函数改名后，在原 `main(config)` 的最终返回前调用，并按两者返回类型正确解析/串联。合并逻辑需要结合原脚本，项目不声称能无条件合并任意自定义覆写。
+**已有自定义 JS / YAML 覆写的用户：** 不要替换当前脚本。优先使用 B，或将本脚本函数改名后，在原 `main(config)` 的最终返回前调用，并按两者返回类型正确解析/串联。合并逻辑需要结合原脚本，项目不声称能无条件合并任意自定义覆写。
 
 <a id="offline"></a>
 
@@ -219,3 +219,4 @@ MRS 提供者每 24 小时更新域名；JS 文件本身是否定时更新，由
 - [内置覆写追加顺序](https://github.com/KaringX/clashmi/blob/daef7be6c40d49a98a174a82c10599e163e71afd/lib/app/local_services/vpn_service.dart)。
 
 已实现 GitHub Actions 上的真实 Mihomo MRS / HTTP 提供者与匹配验证。未在真实 iPhone 的 Clash Mi 界面或已登录券商 App 环境完成测试；界面路径和 App 自身最终合并行为需以实际版本生效配置确认。分流规则不能保证所有交易流量覆盖，也不决定券商的账户或地区政策。
+
