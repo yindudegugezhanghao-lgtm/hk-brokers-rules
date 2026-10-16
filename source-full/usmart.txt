@@ -1,0 +1,10 @@
+# Community-sourced optional Full edition; not official-verified.
+# Evidence and scope: docs/full-sources.md
+DOMAIN-SUFFIX,usmart-app.com
+DOMAIN-SUFFIX,usmart.sg
+DOMAIN-SUFFIX,usmart66.com
+DOMAIN-SUFFIX,usmart8.com
+DOMAIN-SUFFIX,usmartgroup.com
+DOMAIN-SUFFIX,usmarthk.com
+DOMAIN-SUFFIX,usmartsg.com
+DOMAIN-SUFFIX,yxzq.com

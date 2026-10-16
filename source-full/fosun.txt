@@ -1,0 +1,4 @@
+# Community-sourced optional Full edition; not official-verified.
+# Evidence and scope: docs/full-sources.md
+DOMAIN-SUFFIX,fosunwealth.cn
+DOMAIN-SUFFIX,mfosunhani.com

@@ -1,0 +1,7 @@
+# Community-sourced optional Full edition; not official-verified.
+# Evidence and scope: docs/full-sources.md
+DOMAIN-SUFFIX,htsc.com
+DOMAIN-SUFFIX,htsc.com.cn
+DOMAIN-SUFFIX,htzq.com.cn
+DOMAIN-SUFFIX,ihtfin.com
+DOMAIN-SUFFIX,zhangleglobal.com
