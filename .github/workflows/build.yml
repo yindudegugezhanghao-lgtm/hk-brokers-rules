@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'source/**'
+      - 'source-full/**'
       - 'scripts/**'
       - 'tests/**'
       - 'examples/**'
@@ -15,6 +16,7 @@ on:
   pull_request:
     paths:
       - 'source/**'
+      - 'source-full/**'
       - 'scripts/**'
       - 'tests/**'
       - 'examples/**'

@@ -29,7 +29,7 @@ def free_port():
         return sock.getsockname()[1]
 
 
-def validate_all(exe, out, domains):
+def validate_all(exe, out, domains, full_domains=None, full_ips=None):
     cloud_only()
     fixture_hits = []
 
@@ -37,7 +37,7 @@ def validate_all(exe, out, domains):
         def do_GET(self):
             if self.path.startswith("/rules/"):
                 filename = self.path.removeprefix("/rules/")
-                if filename not in {"HK_Brokers.mrs", "HK_Brokers.yaml", "HK_Brokers.list", "HK_Brokers_classical.yaml"}:
+                if filename not in {"HK_Brokers.mrs", "HK_Brokers.yaml", "HK_Brokers.list", "HK_Brokers_classical.yaml", "HK_Brokers_Full.mrs", "HK_Brokers_Full.yaml", "HK_Brokers_Full.list", "HK_Brokers_Full_classical.yaml"}:
                     self.send_error(404)
                     return
                 body = (out / filename).read_bytes()
@@ -58,7 +58,9 @@ def validate_all(exe, out, domains):
     fixture_port = fixture.server_address[1]
     positives = [h for d in domains for h in (d, "api." + d, "quote.deep." + d)]
     negatives = NEGATIVES + [h for d in domains for h in ("not" + d, d + ".example.invalid")]
-    all_hosts = {h: "127.0.0.1" for h in positives + negatives}
+    expanded = full_domains or domains
+    all_hosts = {h: "127.0.0.1" for h in positives + negatives +
+                 [h for d in expanded for h in (d, "api." + d, "not" + d, d + ".example.invalid")]}
     opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
     results = {"roundtrip": "passed", "providers": []}
     cases = [("HK_Brokers.list", "text", "classical", "file"),
@@ -66,9 +68,23 @@ def validate_all(exe, out, domains):
              ("HK_Brokers_classical.yaml", "yaml", "classical", "file"),
              ("HK_Brokers.mrs", "mrs", "domain", "file"),
              ("HK_Brokers.mrs", "mrs", "domain", "http"),
-             ("HK_Brokers_classical.yaml", "yaml", "classical", "http")]
+             ("HK_Brokers_classical.yaml", "yaml", "classical", "http"),
+             ("HK_Brokers_Full.list", "text", "classical", "file"),
+             ("HK_Brokers_Full.yaml", "yaml", "domain", "file"),
+             ("HK_Brokers_Full.mrs", "mrs", "domain", "file"),
+             ("HK_Brokers_Full_classical.yaml", "yaml", "classical", "file"),
+             ("HK_Brokers_Full_classical.yaml", "yaml", "classical", "http")]
     try:
         for filename, format_, behavior, type_ in cases:
+            is_full = filename.startswith("HK_Brokers_Full")
+            case_domains = (full_domains or domains) if is_full else domains
+            case_ips = (full_ips or []) if is_full and behavior == "classical" else []
+            if is_full:
+                positives = [d for d in case_domains] + ["api." + d for d in case_domains[:12]]
+                negatives = NEGATIVES + ["not" + d for d in case_domains[:12]]
+            else:
+                positives = [h for d in domains for h in (d, "api." + d, "quote.deep." + d)]
+                negatives = NEGATIVES + [h for d in domains for h in ("not" + d, d + ".example.invalid")]
             with tempfile.TemporaryDirectory(dir=ROOT / ".build") as tmp:
                 home = Path(tmp)
                 (home / "rules").mkdir()
@@ -104,7 +120,7 @@ def validate_all(exe, out, domains):
                             try:
                                 with opener.open(f"http://127.0.0.1:{api_port}/providers/rules", timeout=1) as r:
                                     loaded = json.load(r).get("providers", {}).get("HK_Brokers", {})
-                                if loaded.get("ruleCount") == len(domains):
+                                if loaded.get("ruleCount") == len(case_domains) + len(case_ips):
                                     break
                             except (OSError, ValueError):
                                 pass

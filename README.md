@@ -20,7 +20,24 @@ Free, open-source domain routing rules for six Hong Kong brokerage platforms. Re
 | 盈立证券 / uSMART | [usmart.txt](source/usmart.txt) | 3 |
 | 星财富 / 复星财富 | [fosun.txt](source/fosun.txt) | 4 |
 
-仅维护上述六家，不含银行、其他券商、IP、关键词、共享云、通用 CDN、广告追踪或独立第三方金融平台。主域覆盖所有子域，不重复维护已覆盖的 API 子域。主域规则也可能覆盖券商自身资讯、社区及静态资源。未确认项不默认启用。
+**精简版**仅维护上述六家，不含银行、其他券商、IP、关键词、共享云、通用 CDN、广告追踪或独立第三方金融平台。主域覆盖所有子域，不重复维护已覆盖的 API 子域。主域规则也可能覆盖券商自身资讯、社区及静态资源。未确认项不默认启用。
+
+## 可选全量版 Full（域名 + IP）
+
+为希望只代理六家券商相关流量、避免整机全局代理的使用者提供 **Full 全量候选版**。精简版保留24条经过官方资料交叉核验的主域名；Full 基于精简版额外整理社区候选，包含 **132个域名后缀 + 94条 IP-CIDR（共226条）**。
+
+> Full 里的 IP 段可能是共享云厂商，可能匹配其他 App 的连接；也不能保证覆盖券商所有请求或改变账户所属地区。此清单来自公开社区与部分客户端审计，并非所有主域都有最新官方归属证明。
+
+| 版本 | 地址 | 用途 |
+| --- | --- | --- |
+| **Full Classical YAML（新版 iPhone Clash 推荐）** | [HK_Brokers_Full_classical.yaml](https://raw.githubusercontent.com/yindudegugezhanghao-lgtm/hk-brokers-rules/release/rules/HK_Brokers_Full_classical.yaml) | **132域名 + 94 IP**；`behavior: classical` |
+| Full LIST | [HK_Brokers_Full.list](https://raw.githubusercontent.com/yindudegugezhanghao-lgtm/hk-brokers-rules/release/rules/HK_Brokers_Full.list) | **132域名 + 94 IP**；`behavior: classical` |
+| Full YAML（domain only） | [HK_Brokers_Full.yaml](https://raw.githubusercontent.com/yindudegugezhanghao-lgtm/hk-brokers-rules/release/rules/HK_Brokers_Full.yaml) | **132域名，无IP**；`behavior: domain` |
+| Full MRS（domain only） | [HK_Brokers_Full.mrs](https://raw.githubusercontent.com/yindudegugezhanghao-lgtm/hk-brokers-rules/release/rules/HK_Brokers_Full.mrs) | **132域名，无IP**；`behavior: domain` |
+
+**重要**：Full 是可选的独立订阅，精简版旧地址保持不变。若要切换，请先移除当前配置里的精简版规则引用，再加入 Full 规则集，以免两份重复；需要保留原机场分流和原节点设置。新版 Clash 显示为 `inline` 时，不能仅凭下载链接推断定时刷新已经生效，必要时在界面手动重新下载。
+
+完整原始候选、上游仓库、审查边界见 [Full 数据说明](docs/full-sources.md)；`source-full/` 为人工维护的候选增量，不自动从上游拉取。
 
 ## 下载与订阅
 

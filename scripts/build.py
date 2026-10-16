@@ -152,18 +152,24 @@ def main():
     parser.add_argument("--validate-only", action="store_true")
     args = parser.parse_args()
     brokers, by_broker, domains = collect()
-    print(f"Validated {len(domains)} domains across {len(brokers)} brokers", flush=True)
+    from full import collect_full
+    full_groups, full_domains, full_ips = collect_full(ROOT, by_broker)
+    print(f"Validated {len(domains)} core domains; Full: {len(full_domains)} domains + {len(full_ips)} CIDRs", flush=True)
     if args.validate_only:
         return
     cloud_only()
     exe, version = install_mihomo()
     out = ROOT / ".build/rules"
     compile_rules(exe, out, brokers, by_broker, domains)
+    from full import write_full
+    write_full(exe, out, brokers, full_groups, full_domains, full_ips)
     # Import only after the cloud guard: no local MRS execution.
     from validate_runtime import validate_all
-    results = validate_all(exe, out, domains)
+    results = validate_all(exe, out, domains, full_domains, full_ips)
     manifest = {
         "domain_count": len(domains), "brokers": by_broker,
+        "full_domain_count": len(full_domains), "full_ip_cidr_count": len(full_ips),
+        "full_brokers": full_groups, "full_ip_cidrs": full_ips,
         "source_commit": os.environ["GITHUB_SHA"],
         "workflow_run": f"https://github.com/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}",
         "mihomo": version,

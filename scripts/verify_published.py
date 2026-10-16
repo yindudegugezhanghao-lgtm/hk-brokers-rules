@@ -16,7 +16,7 @@ immutable = f"https://raw.githubusercontent.com/{repository}/{os.environ['RELEAS
 remote = ROOT / ".build/downloaded"
 remote.mkdir(exist_ok=True)
 deadline = time.monotonic() + 360  # GitHub raw can cache a moving branch for 5 minutes.
-for name in ["HK_Brokers.list", "HK_Brokers.yaml", "HK_Brokers_classical.yaml", "HK_Brokers.mrs", "manifest.json", "validation.json", "SHA256SUMS"]:
+for name in ["HK_Brokers.list", "HK_Brokers.yaml", "HK_Brokers_classical.yaml", "HK_Brokers.mrs", "HK_Brokers_Full.list", "HK_Brokers_Full.yaml", "HK_Brokers_Full_classical.yaml", "HK_Brokers_Full.mrs", "manifest.json", "validation.json", "SHA256SUMS"]:
     expected = (ROOT / ".build/rules" / name).read_bytes()
     for attempt in range(73):
         try:
@@ -38,6 +38,8 @@ for name in ["HK_Brokers.list", "HK_Brokers.yaml", "HK_Brokers_classical.yaml", 
             print(f"Waiting for GitHub raw propagation: {name}: {exc}", flush=True)
             time.sleep(5)
 domains = sorted(d for group in manifest["brokers"].values() for d in group)
-validate_all(ROOT / ".tools/mihomo", remote, domains)
+validate_all(ROOT / ".tools/mihomo", remote, domains,
+             sorted(d for group in manifest["full_brokers"].values() for d in group),
+             manifest["full_ip_cidrs"])
 with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as summary:
     summary.write("\nPublic HTTPS downloads matched build bytes. Downloaded MRS passed live routing tests again.\n")
