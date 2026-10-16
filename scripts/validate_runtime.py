@@ -37,7 +37,7 @@ def validate_all(exe, out, domains):
         def do_GET(self):
             if self.path.startswith("/rules/"):
                 filename = self.path.removeprefix("/rules/")
-                if filename not in {"HK_Brokers.mrs", "HK_Brokers.yaml", "HK_Brokers.list"}:
+                if filename not in {"HK_Brokers.mrs", "HK_Brokers.yaml", "HK_Brokers.list", "HK_Brokers_classical.yaml"}:
                     self.send_error(404)
                     return
                 body = (out / filename).read_bytes()
@@ -61,17 +61,18 @@ def validate_all(exe, out, domains):
     all_hosts = {h: "127.0.0.1" for h in positives + negatives}
     opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
     results = {"roundtrip": "passed", "providers": []}
-    cases = [("list", "text", "classical", "file"),
-             ("yaml", "yaml", "domain", "file"),
-             ("mrs", "mrs", "domain", "file"),
-             ("mrs", "mrs", "domain", "http")]
+    cases = [("HK_Brokers.list", "text", "classical", "file"),
+             ("HK_Brokers.yaml", "yaml", "domain", "file"),
+             ("HK_Brokers_classical.yaml", "yaml", "classical", "file"),
+             ("HK_Brokers.mrs", "mrs", "domain", "file"),
+             ("HK_Brokers.mrs", "mrs", "domain", "http"),
+             ("HK_Brokers_classical.yaml", "yaml", "classical", "http")]
     try:
-        for extension, format_, behavior, type_ in cases:
+        for filename, format_, behavior, type_ in cases:
             with tempfile.TemporaryDirectory(dir=ROOT / ".build") as tmp:
                 home = Path(tmp)
                 (home / "rules").mkdir()
                 proxy_port, api_port = free_port(), free_port()
-                filename = "HK_Brokers." + extension
                 provider = {"type": type_, "behavior": behavior, "format": format_,
                             "path": "./rules/" + filename}
                 if type_ == "file":

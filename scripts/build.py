@@ -121,6 +121,10 @@ def install_mihomo():
     return exe, version
 
 
+def classical_yaml(domains):
+    return "payload:\n" + "".join(f"  - 'DOMAIN-SUFFIX,{d}'\n" for d in domains)
+
+
 def compile_rules(exe, out, brokers, by_broker, domains):
     cloud_only()
     out.mkdir(parents=True, exist_ok=True)
@@ -131,6 +135,7 @@ def compile_rules(exe, out, brokers, by_broker, domains):
     (out / "HK_Brokers.list").write_text("\n".join(lines) + "\n", encoding="utf-8")
     yaml = "payload:\n" + "".join(f"  - '+.{d}'\n" for d in domains)
     (out / "HK_Brokers.yaml").write_text(yaml, encoding="utf-8")
+    (out / "HK_Brokers_classical.yaml").write_text(classical_yaml(domains), encoding="utf-8")
     subprocess.run([str(exe), "convert-ruleset", "domain", "yaml",
                     str(out / "HK_Brokers.yaml"), str(out / "HK_Brokers.mrs")], check=True)
     dump = out / "roundtrip.txt"
@@ -163,7 +168,7 @@ def main():
         "workflow_run": f"https://github.com/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{os.environ['GITHUB_RUN_ID']}",
         "mihomo": version,
         "built_at": dt.datetime.now(dt.timezone.utc).isoformat(),
-        "files": {p.name: digest(p.read_bytes()) for p in sorted(out.glob("HK_Brokers.*"))},
+        "files": {p.name: digest(p.read_bytes()) for p in sorted(out.glob("HK_Brokers*"))},
     }
     (out / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (out / "validation.json").write_text(json.dumps(results, indent=2) + "\n")

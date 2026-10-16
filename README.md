@@ -28,10 +28,11 @@ Free, open-source domain routing rules for six Hong Kong brokerage platforms. Re
 | --- | --- | --- |
 | **MRS（推荐）** | [HK_Brokers.mrs](https://raw.githubusercontent.com/yindudegugezhanghao-lgtm/hk-brokers-rules/release/rules/HK_Brokers.mrs) | `behavior: domain` · `format: mrs` |
 | YAML | [HK_Brokers.yaml](https://raw.githubusercontent.com/yindudegugezhanghao-lgtm/hk-brokers-rules/release/rules/HK_Brokers.yaml) | `behavior: domain` · `format: yaml` |
+| **Classical YAML（新版 Clash 规则集合）** | [HK_Brokers_classical.yaml](https://raw.githubusercontent.com/yindudegugezhanghao-lgtm/hk-brokers-rules/release/rules/HK_Brokers_classical.yaml) | `behavior: classical` · `format: yaml` |
 | 原始 LIST | [HK_Brokers.list](https://raw.githubusercontent.com/yindudegugezhanghao-lgtm/hk-brokers-rules/release/rules/HK_Brokers.list) | `behavior: classical` · `format: text` |
 | 校验和 / 测试 | [SHA256SUMS](https://raw.githubusercontent.com/yindudegugezhanghao-lgtm/hk-brokers-rules/release/rules/SHA256SUMS) · [validation.json](https://raw.githubusercontent.com/yindudegugezhanghao-lgtm/hk-brokers-rules/release/rules/validation.json) | [Actions 运行记录](https://github.com/yindudegugezhanghao-lgtm/hk-brokers-rules/actions) |
 
-`release` 分支始终保留最近一次验证通过的整套文件；`main` 用于人工维护源文件。MRS 为官方 Mihomo **v1.19.32** 工具生成的二进制；YAML 的 `+.example.com` 与 LIST 的 `DOMAIN-SUFFIX,example.com` 含义相同。
+`release` 分支始终保留最近一次验证通过的整套文件；`main` 用于人工维护源文件。MRS 为官方 Mihomo **v1.19.32** 工具生成的二进制；原有 YAML 的 `+.example.com` 与 LIST 的 `DOMAIN-SUFFIX,example.com` 含义相同。另提供 Classical YAML，其 `payload` 为 `DOMAIN-SUFFIX,example.com`，适合要求 classical 规则语法的客户端规则集导入页面。
 
 这些文件是规则集，不是节点订阅，也不是完整代理配置。GitHub 链接可达性取决于用户网络；首次下载可使用现有可用连接。配置文件中的 `type: http` 同样支持 HTTPS URL。
 

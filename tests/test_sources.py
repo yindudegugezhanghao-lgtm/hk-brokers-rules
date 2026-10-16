@@ -7,7 +7,7 @@ import tempfile
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
-from build import ROOT, collect, validate_domain, cloud_only
+from build import ROOT, collect, validate_domain, cloud_only, classical_yaml
 
 
 class SourceValidation(unittest.TestCase):
@@ -15,6 +15,11 @@ class SourceValidation(unittest.TestCase):
         brokers, grouped, domains = collect()
         self.assertEqual(set(brokers), set(grouped))
         self.assertEqual(sum(map(len, grouped.values())), len(domains))
+
+    def test_classical_yaml_contains_only_reviewed_domains(self):
+        _, _, domains = collect()
+        self.assertEqual(classical_yaml(domains).splitlines(),
+                         ["payload:"] + [f"  - 'DOMAIN-SUFFIX,{d}'" for d in domains])
 
     def test_invalid_broad_and_non_main_domains(self):
         for domain in ["127.0.0.1", "::1", "*.futunn.com", "com", "com.hk",

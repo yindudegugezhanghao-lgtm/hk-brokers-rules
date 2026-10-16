@@ -16,13 +16,13 @@ immutable = f"https://raw.githubusercontent.com/{repository}/{os.environ['RELEAS
 remote = ROOT / ".build/downloaded"
 remote.mkdir(exist_ok=True)
 deadline = time.monotonic() + 360  # GitHub raw can cache a moving branch for 5 minutes.
-for name in ["HK_Brokers.list", "HK_Brokers.yaml", "HK_Brokers.mrs", "manifest.json", "validation.json", "SHA256SUMS"]:
+for name in ["HK_Brokers.list", "HK_Brokers.yaml", "HK_Brokers_classical.yaml", "HK_Brokers.mrs", "manifest.json", "validation.json", "SHA256SUMS"]:
     expected = (ROOT / ".build/rules" / name).read_bytes()
     for attempt in range(73):
         try:
             # Verify exact user subscription URLs. Run-specific metadata is
             # checked at the immutable published Git commit, not a cached branch.
-            url = (base if name.startswith("HK_Brokers.") else immutable) + name
+            url = (base if name.startswith("HK_Brokers") else immutable) + name
             req = urllib.request.Request(url,
                                          headers={"Cache-Control": "no-cache"})
             with urllib.request.urlopen(req, timeout=20) as response:

@@ -6,7 +6,7 @@
 
 1. `brokers.json` 登记券商；当前仅六家。`source/<broker>.txt` 是唯一人工规则源，`docs/domains.json` 是逐条证据元数据。
 2. `scripts/build.py` 严格检查语法、主域层级、大小写、重复、IP、规则类型、来源与券商对应；合并使用集合确保产物唯一。发现重复源条目时失败，要求维护者消除歧义。
-3. LIST 输出 `DOMAIN-SUFFIX`，YAML 输出 `payload` 下的 `+.domain`，供 `behavior: domain` 使用。
+3. LIST 输出 `DOMAIN-SUFFIX`；原 YAML 输出 `payload` 下的 `+.domain` 供 `behavior: domain` 使用；Classical YAML 输出 `payload` 下的 `DOMAIN-SUFFIX,domain` 供 `behavior: classical` 使用。
 4. 下载 [Mihomo v1.19.32 官方 release](https://github.com/MetaCubeX/mihomo/releases/tag/v1.19.32) 的 Linux amd64 compatible 压缩包，先核对锁文件中的 SHA256 再解压执行。
 5. 使用官方命令生成二进制，并重新读取 MRS 还原为 domain 文本，与源集合逐项比较。
 
@@ -23,6 +23,7 @@ mihomo convert-ruleset domain mrs HK_Brokers.mrs roundtrip.txt
 
 - `classical/text` LIST 文件提供者。
 - `domain/yaml` 文件提供者。
+- `classical/yaml` 文件和 HTTP 提供者。
 - `domain/mrs` 文件提供者。
 - `domain/mrs` HTTP 提供者，通过 HTTP 实际下载 MRS。
 - 每个主域、`api` 子域及多层子域必须命中；相似前缀、主域后追加其他后缀必须不命中。
@@ -37,9 +38,9 @@ mihomo convert-ruleset domain mrs HK_Brokers.mrs roundtrip.txt
 
 `main` 推送或手动运行可发布；`pull_request` 只校验。Actions 固定到提交 SHA，Mihomo 固定版本和压缩包哈希；升级必须通过 PR 审查。流水线无付费服务器和自定义 API 密钥，只使用 GitHub 自带 `GITHUB_TOKEN`。
 
-先完成全部生成及测试，再把 `.build/rules` 作为一次 Git 提交推送至 `release` 分支；LIST / YAML / MRS 不会分批发布。发布前检查源分支头，跳过过时构建，且串行化发布。若生成或测试失败，不更新发布分支；公开下载复核若因 GitHub 传播或网络故障失败，已提交的文件仍是此前通过验证的完整集合，工作流报告失败供排查。
+先完成全部生成及测试，再把 `.build/rules` 作为一次 Git 提交推送至 `release` 分支；LIST / Domain YAML / Classical YAML / MRS 不会分批发布。发布前检查源分支头，跳过过时构建，且串行化发布。若生成或测试失败，不更新发布分支；公开下载复核若因 GitHub 传播或网络故障失败，已提交的文件仍是此前通过验证的完整集合，工作流报告失败供排查。
 
-发布后 `scripts/verify_published.py` 从 GitHub 公共 HTTPS 下载订阅文件，逐字节比较，再用下载文件重做真实路由测试。三个订阅文件使用用户实际填写的稳定直链验证；易变的构建元数据使用刚发布的不可变 Git 提交地址，避免重复发布时读到缓存旧记录。GitHub raw CDN 对分支可能缓存约五分钟，脚本在总计六分钟内重试订阅直链。
+发布后 `scripts/verify_published.py` 从 GitHub 公共 HTTPS 下载订阅文件，逐字节比较，再用下载文件重做真实路由测试。四个订阅文件使用用户实际填写的稳定直链验证；易变的构建元数据使用刚发布的不可变 Git 提交地址，避免重复发布时读到缓存旧记录。GitHub raw CDN 对分支可能缓存约五分钟，脚本在总计六分钟内重试订阅直链。
 
 `manifest.json` 包含域名数量、分券商列表、来源提交、工具版本、构建时间、Actions 地址和文件哈希；`validation.json` 包含测试结果，`SHA256SUMS` 用于内容校验。每个发布提交可回溯和恢复。
 
