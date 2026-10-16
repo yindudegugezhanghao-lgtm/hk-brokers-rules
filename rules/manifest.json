@@ -39,9 +39,9 @@
     ]
   },
   "source_commit": "e773e2e86336abd4be6e72cad849193d59544d12",
-  "workflow_run": "https://github.com/yindudegugezhanghao-lgtm/hk-brokers-rules/actions/runs/38827276426",
+  "workflow_run": "https://github.com/yindudegugezhanghao-lgtm/hk-brokers-rules/actions/runs/38827373117",
   "mihomo": "Mihomo Meta v1.19.32 linux amd64 with go1.26.8 Wed Sep 30 16:55:19 UTC 2026\nUse tags: with_gvisor",
-  "built_at": "2026-10-16T00:04:03.479205+00:00",
+  "built_at": "2026-10-16T00:04:57.912356+00:00",
   "files": {
     "HK_Brokers.list": "ba6c86ca4ab21ff46b21f727b8fa52d207008cd2f11c251f4550e7ac88815aea",
     "HK_Brokers.mrs": "81971aca44c768cc41d3bbfe8f93e019317ef1caa909507f452dae273b1fb745",
